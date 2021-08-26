@@ -1,0 +1,120 @@
+repos:
+- id: /.*/
+  allowed_overrides: [workflow]
+  allow_custom_workflows: false
+
+workflows:
+    pre-prod-global:
+        plan:
+            steps:
+            - run: rm -f .terraform/terraform.tfstate
+            - env:
+                name: GOOGLE_APPLICATION_CREDENTIALS
+                value: /local/config/atlantis/secrets/cd-mim-pre-prod-sa.json
+            - env:
+                name: CHECKPOINT_DISABLE
+                value: yolo
+            - env:
+                name: TF_VAR_slack_auth_token
+                command: cat /local/config/atlantis/secrets/slack_auth_token
+            - init:
+                extra_args: ["-backend-config=environments/pre-prod/global.backend.tfvars"]
+            - plan:
+                extra_args: ["-lock=false", "-var-file=environments/pre-prod/global.tfvars"]
+        apply:
+            steps:
+            - env:
+                name: GOOGLE_APPLICATION_CREDENTIALS
+                value: /local/config/atlantis/secrets/cd-mim-pre-prod-sa.json
+            - env:
+                name: CHECKPOINT_DISABLE
+                value: yolo
+            - apply:
+                extra_args: ["-lock=false"]
+    prod-global:
+        plan:
+            steps:
+            - run: rm -f .terraform/terraform.tfstate
+            - env:
+                name: GOOGLE_APPLICATION_CREDENTIALS
+                value: /local/config/atlantis/secrets/cd-mim-prod-sa.json
+            - env:
+                name: CHECKPOINT_DISABLE
+                value: yolo
+            - env:
+                name: TF_VAR_pagerduty_high_token
+                command: cat /local/config/atlantis/secrets/pagerduty_high_token
+            - env:
+                name: TF_VAR_pagerduty_low_token
+                command: cat /local/config/atlantis/secrets/pagerduty_low_token
+            - env:
+                name: TF_VAR_slack_auth_token
+                command: cat /local/config/atlantis/secrets/slack_auth_token
+            - init:
+                extra_args: ["-backend-config=environments/prod/global.backend.tfvars"]
+            - plan:
+                extra_args: ["-lock=false", "-var-file=environments/prod/global.tfvars"]
+        apply:
+            steps:
+            - env:
+                name: GOOGLE_APPLICATION_CREDENTIALS
+                value: /local/config/atlantis/secrets/cd-mim-prod-sa.json
+            - env:
+                name: CHECKPOINT_DISABLE
+                value: yolo
+            - apply:
+                extra_args: ["-lock=false"]
+    pre-prod-australia-southeast1:
+        plan:
+            steps:
+            - run: rm -f .terraform/terraform.tfstate
+            - env:
+                name: GOOGLE_APPLICATION_CREDENTIALS
+                value: /local/config/atlantis/secrets/cd-mim-pre-prod-sa.json
+            - env:
+                name: CHECKPOINT_DISABLE
+                value: yolo
+            - env:
+                name: TF_VAR_vault_token
+                command: cat /secrets/vault_token
+            - init:
+                extra_args: ["-backend-config=environments/pre-prod/australia-southeast1.backend.tfvars"]
+            - plan:
+                extra_args: ["-lock=false", "-var-file=environments/pre-prod/australia-southeast1.tfvars"]
+        apply:
+            steps:
+            - env:
+                name: GOOGLE_APPLICATION_CREDENTIALS
+                value: /local/config/atlantis/secrets/cd-mim-pre-prod-sa.json
+            - env:
+                name: CHECKPOINT_DISABLE
+                value: yolo
+            - apply:
+                extra_args: ["-lock=false"]
+    prod-australia-southeast1:
+        plan:
+            steps:
+            - run: rm -f .terraform/terraform.tfstate
+            - env:
+                name: GOOGLE_APPLICATION_CREDENTIALS
+                value: /local/config/atlantis/secrets/cd-mim-prod-sa.json
+            - env:
+                name: CHECKPOINT_DISABLE
+                value: yolo
+            - env:
+                name: TF_VAR_vault_token
+                command: cat /secrets/vault_token
+            - init:
+                extra_args: ["-backend-config=environments/prod/australia-southeast1.backend.tfvars"]
+            - plan:
+                extra_args: ["-lock=false", "-var-file=environments/prod/australia-southeast1.tfvars"]
+        apply:
+            steps:
+            - env:
+                name: GOOGLE_APPLICATION_CREDENTIALS
+                value: /local/config/atlantis/secrets/cd-mim-prod-sa.json
+            - env:
+                name: CHECKPOINT_DISABLE
+                value: yolo
+            - apply:
+                extra_args: ["-lock=false"]

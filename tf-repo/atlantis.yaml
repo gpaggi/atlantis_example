@@ -1,0 +1,20 @@
+---
+version: 3
+
+projects:
+- name: pre-prod-global
+  dir: global
+  workflow: pre-prod-global
+  autoplan:
+    when_modified: ["./**/*.tf*", "./*.tf*", "./configs/**/*"]
+- name: prod-global
+  dir: global
+  workflow: prod-global
+  autoplan:
+    when_modified: ["./**/*.tf*", "./*.tf*", "./configs/**/*"]
+- name: pre-prod-australia-southeast1
+  dir: regional
+  workflow: pre-prod-australia-southeast1
+- name: prod-australia-southeast1
+  dir: regional
+  workflow: prod-australia-southeast1
